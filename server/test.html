@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <button onclick="sendMessage()">Send Message</button>
+    <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+    <script>
+        const socket = io('http://localhost:3000')
+
+        socket.on('connect', () => {
+            console.log('Connected! My ID is:', socket.id)
+        })
+
+        // Listen for broadcasts from server
+        socket.on('test_message', (data) => {
+            console.log('Received:', data)
+        })
+
+        function sendMessage() {
+            socket.emit('test_message', { text: 'hello from ' + socket.id })
+        }
+    </script>
+</body>
+</html>
