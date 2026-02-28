@@ -162,4 +162,64 @@ function seed() {
 
 seed()
 
-module.exports = db
+function getFullState() {
+    const rows = db.prepare(`
+        SELECT 
+            s.id as section_id, s.name as section_name, s.respawn_type, s.respawn_min, s.respawn_max,
+            f.id as floor_id, f.name as floor_name,
+            b.id as boss_id, b.name as boss_name, b.position,
+            bs.killed_at, bs.respawn_at, bs.respawn_min_at, bs.respawn_max_at
+        FROM sections s
+        JOIN floors f ON f.section_id = s.id
+        JOIN bosses b ON b.floor_id = f.id
+        LEFT JOIN boss_state bs ON bs.boss_id = b.id
+        ORDER BY s.id, f.id, b.id
+    `).all()
+
+    // Reshape flat rows into nested sections > floors > bosses
+    const sectionsMap = new Map()
+
+    for (const row of rows) {
+        // Get or create section
+        if (!sectionsMap.has(row.section_id)) {
+            sectionsMap.set(row.section_id, {
+                id: row.section_id,
+                name: row.section_name,
+                respawnType: row.respawn_type,
+                respawnMin: row.respawn_min,
+                respawnMax: row.respawn_max,
+                floors: new Map()
+            })
+        }
+        const section = sectionsMap.get(row.section_id)
+
+        // Get or create floor
+        if (!section.floors.has(row.floor_id)) {
+            section.floors.set(row.floor_id, {
+                id: row.floor_id,
+                name: row.floor_name,
+                bosses: []
+            })
+        }
+        const floor = section.floors.get(row.floor_id)
+
+        // Add boss
+        floor.bosses.push({
+            id: row.boss_id,
+            name: row.boss_name,
+            position: row.position,
+            killedAt: row.killed_at ?? null,
+            respawnAt: row.respawn_at ?? null,
+            respawnMinAt: row.respawn_min_at ?? null,
+            respawnMaxAt: row.respawn_max_at ?? null,
+        })
+    }
+
+    // Convert Maps to arrays
+    return Array.from(sectionsMap.values()).map(section => ({
+        ...section,
+        floors: Array.from(section.floors.values())
+    }))
+}
+
+module.exports = { db, getFullState }

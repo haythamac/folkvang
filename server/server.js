@@ -1,4 +1,4 @@
-const db = require('./database')
+const { db, getFullState } = require('./database')
 console.log('Database connected')
 
 const express = require("express");
@@ -26,6 +26,10 @@ app.use("/", (req, res) => {
 // this runs every time a browser connects
 io.on("connection", (socket) => {
 	console.log("Someone connected:", socket.id);
+
+    // Send full state to the client that just connected
+    const state = getFullState()
+    socket.emit('full_state', state)
 
 	// listen for a test event from any client
 	socket.on("test_message", (data) => {
