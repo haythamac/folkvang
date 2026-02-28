@@ -1,3 +1,6 @@
+const db = require('./database')
+console.log('Database connected')
+
 const express = require("express");
 const http = require("http"); // needed to create a raw HTTP server
 const { Server } = require("socket.io"); // Socket.io's server class
