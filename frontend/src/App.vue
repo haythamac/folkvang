@@ -47,7 +47,9 @@ setInterval(() => now.value = Date.now(), 1000)
 const { spawningSoon } = useSpawningSoon(sections, now)
 // Create dungeon state once
 socket.on('full_state', (state) => {
-    sections.value = state
+    sections.value = state.filter(s => 
+        !['Myrkrheim', "Troll's Tomb"].includes(s.name)
+    )
 })
 
 socket.on('boss_killed', ({ bossId, killedAt, respawnAt, respawnMinAt, respawnMaxAt }) => {
