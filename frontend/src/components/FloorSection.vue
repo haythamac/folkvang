@@ -5,13 +5,13 @@
             {{ section.name }}
         </h2>
         <!-- Floors as 2x2 grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 gap-6">
             <div v-for="(floor, floorIndex) in section.floors" :key="floorIndex"
                 class="space-y-3 bg-card/40 border border-border rounded-xl p-6 shadow-inner">
-                <h3 class="text-gold text-2xl font-bold text-primary glow-gold tracking-wide mb-4">
+                <h3 class="text-gold text-2xl font-bold tracking-wide mb-4">
                     {{ floor.name }}
                 </h3>
-                <div :class="['grid', 'grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-1', 'lg:grid-cols-2', 'gap-3']">
+                <div class="grid grid-cols-4 gap-3">
                     <BossCard v-for="(boss, bossIndex) in floor.bosses" :key="bossIndex" :boss="boss" :section="section"
                         @kill="(killedAt) => handleKill(boss, killedAt)" @reset="() => handleReset(boss)" />
                 </div>

@@ -5,7 +5,7 @@
     ]">
         <div class="flex items-center justify-between mb-2">
             <div>
-                <h4 class="font-display text-sm font-semibold tracking-wide">
+                <h4 class="font-display text-lg font-semibold tracking-wide text-primary glow-gold">
                     {{ boss.name }}
                 </h4>
 
