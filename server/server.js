@@ -1,5 +1,11 @@
-const { db, getFullState } = require('./database')
-console.log('Database connected')
+const {
+	db,
+	getFullState,
+	getStrategyByBossId,
+	upsertBossState,
+	clearBossState,
+} = require("./database");
+console.log("Database connected");
 
 const express = require("express");
 const http = require("http"); // needed to create a raw HTTP server
@@ -27,9 +33,9 @@ app.use("/", (req, res) => {
 io.on("connection", (socket) => {
 	console.log("Someone connected:", socket.id);
 
-    // Send full state to the client that just connected
-    const state = getFullState()
-    socket.emit('full_state', state)
+	// Send full state to the client that just connected
+	const state = getFullState();
+	socket.emit("full_state", state);
 
 	// listen for a test event from any client
 	socket.on("test_message", (data) => {
@@ -38,16 +44,56 @@ io.on("connection", (socket) => {
 	});
 
 	socket.on("boss_kill", (data) => {
-		console.log("Boss killed:", data);
-		io.emit("boss_killed", data); // broadcast to all clients
+		const { bossId, killedAt } = data;
+
+		// Get the strategy for this boss from the database
+		const strategy = getStrategyByBossId.get(bossId);
+		if (!strategy) return;
+
+		// Calculate respawn times on the server
+		let respawnAt = null;
+		let respawnMinAt = null;
+		let respawnMaxAt = null;
+
+		if (strategy.respawn_type === "fixed") {
+			respawnAt = killedAt + strategy.respawn_min;
+		} else {
+			respawnMinAt = killedAt + strategy.respawn_min;
+			respawnMaxAt = killedAt + strategy.respawn_max;
+		}
+
+		// Save to database
+		upsertBossState.run({
+			bossId,
+			killedAt,
+			respawnAt,
+			respawnMinAt,
+			respawnMaxAt,
+		});
+
+		// Broadcast to all clients
+		io.emit("boss_killed", {
+			bossId,
+			killedAt,
+			respawnAt,
+			respawnMinAt,
+			respawnMaxAt,
+		});
+		console.log(
+			`Boss ${bossId} killed at ${new Date(killedAt).toLocaleTimeString()}`,
+		);
 	});
 
-	socket.on("boss_reset", (data) => {
-		console.log("Boss reset:", data);
-		io.emit("boss_revived", data); // broadcast to all clients
-	});
+	socket.on('boss_reset', (data) => {
+		const { bossId } = data
 
-    socket.on("kill", (data) => {
+		clearBossState.run(bossId)
+
+		io.emit('boss_revived', { bossId })
+		console.log(`Boss ${bossId} revived`)
+	})
+
+	socket.on("kill", (data) => {
 		console.log("Boss killed:", data);
 		io.emit("boss_killed", data); // broadcast to all clients
 	});

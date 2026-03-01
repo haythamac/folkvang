@@ -222,4 +222,31 @@ function getFullState() {
     }))
 }
 
-module.exports = { db, getFullState }
+const getStrategyByBossId = db.prepare(`
+    SELECT s.respawn_type, s.respawn_min, s.respawn_max
+    FROM bosses b
+    JOIN floors f ON f.id = b.floor_id
+    JOIN sections s ON s.id = f.section_id
+    WHERE b.id = ?
+`)
+
+const upsertBossState = db.prepare(`
+    INSERT INTO boss_state (boss_id, killed_at, respawn_at, respawn_min_at, respawn_max_at)
+    VALUES (@bossId, @killedAt, @respawnAt, @respawnMinAt, @respawnMaxAt)
+    ON CONFLICT(boss_id) DO UPDATE SET
+        killed_at = excluded.killed_at,
+        respawn_at = excluded.respawn_at,
+        respawn_min_at = excluded.respawn_min_at,
+        respawn_max_at = excluded.respawn_max_at
+`)
+
+const clearBossState = db.prepare(`
+    UPDATE boss_state SET
+        killed_at = NULL,
+        respawn_at = NULL,
+        respawn_min_at = NULL,
+        respawn_max_at = NULL
+    WHERE boss_id = ?
+`)
+
+module.exports = { db, getFullState, getStrategyByBossId, upsertBossState, clearBossState }
