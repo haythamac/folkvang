@@ -1,8 +1,16 @@
 import { ref } from 'vue'
 import { io } from 'socket.io-client'
 
-const socket = io(import.meta.env.VITE_SERVER_URL)
+const params = new URLSearchParams(window.location.search)
+const isDemo = params.get('demo') === 'true'
+
+const SERVER_URL = isDemo 
+    ? import.meta.env.VITE_DEMO_SERVER_URL 
+    : import.meta.env.VITE_SERVER_URL
+
+const socket = io(SERVER_URL)
 const isConnected = ref(false)
+
 
 socket.on('connect', () => {
     isConnected.value = true
