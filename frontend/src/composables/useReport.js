@@ -21,7 +21,6 @@ export function useReport(sections) {
                     lines.push(`${time} - ${boss.name}`)
                 }
                 lines.push('') // empty line between floors
-                lines.push('') // empty line between floors
             }
         }
 
