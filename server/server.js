@@ -5,6 +5,8 @@ const {
 	upsertBossState,
 	clearBossState,
 } = require("./database");
+require('dotenv').config()
+
 console.log("Database connected");
 
 const express = require("express");
@@ -15,7 +17,9 @@ const app = express();
 const server = http.createServer(app); // wrap express in a real HTTP server
 const io = new Server(server, {
 	// attach Socket.io to that server
-	cors: { origin: "*" }, // allows your Vue app to connect
+	cors: {
+        origin: process.env.CLIENT_URL
+    }
 });
 
 const port = 3000;
@@ -95,7 +99,7 @@ io.on("connection", (socket) => {
 
 	socket.on("kill", (data) => {
 		console.log("Boss killed:", data);
-		io.emit("boss_killed", data); // broadcast to all clients
+		io.emit("boss_killed", data);
 	});
 
 	socket.on("disconnect", () => {
@@ -103,7 +107,8 @@ io.on("connection", (socket) => {
 	});
 });
 
-server.listen(port, () => {
-	// server.listen instead of app.listen
-	console.log(`Server is running on port ${port}`);
-});
+
+const PORT = process.env.PORT || 3000
+server.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`)
+})
