@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-background: hsl(220 20% 10%);
+  --color-foreground: hsl(40 20% 90%);
+  --color-card: hsl(220 18% 14%);
+  --color-card-foreground: hsl(40 20% 90%);
+  --color-popover: hsl(220 18% 14%);
+  --color-popover-foreground: hsl(40 20% 90%);
+  --color-primary: hsl(40 80% 55%);
+  --color-primary-foreground: hsl(220 20% 10%);
+  --color-secondary: hsl(220 15% 20%);
+  --color-secondary-foreground: hsl(40 20% 85%);
+  --color-muted: hsl(220 15% 18%);
+  --color-muted-foreground: hsl(220 10% 55%);
+  --color-accent: hsl(220 15% 22%);
+  --color-accent-foreground: hsl(40 20% 90%);
+  --color-destructive: hsl(0 70% 50%);
+  --color-destructive-foreground: hsl(0 0% 100%);
+  --color-alive: hsl(140 60% 45%);
+  --color-alive-foreground: hsl(140 60% 95%);
+  --color-dead: hsl(0 70% 50%);
+  --color-dead-foreground: hsl(0 70% 90%);
+  --color-border: hsl(220 15% 22%);
+  --color-input: hsl(220 15% 20%);
+  --color-ring: hsl(40 80% 55%);
+  --color-sidebar: hsl(220 20% 10%);
+  --color-sidebar-foreground: hsl(40 20% 90%);
+  --color-sidebar-primary: hsl(40 80% 55%);
+  --color-sidebar-primary-foreground: hsl(220 20% 10%);
+  --color-sidebar-accent: hsl(220 15% 22%);
+  --color-sidebar-accent-foreground: hsl(40 20% 90%);
+  --color-sidebar-border: hsl(220 15% 22%);
+  --color-sidebar-ring: hsl(40 80% 55%);
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: 'Inter', sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cinzel', serif;
+  }
+}
+
+@utility glow-gold {
+  text-shadow: 0 0 20px hsl(40 80% 55% / 0.4);
+}
+
+@utility border-glow {
+  box-shadow: 0 0 15px -3px hsl(40 80% 55% / 0.15), inset 0 1px 0 hsl(40 80% 55% / 0.1);
+}
