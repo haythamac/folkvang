@@ -9,10 +9,13 @@
 			<p class="text-muted-foreground mt-2 text-sm">
 				Interactive & Real-time Boss Timer
 			</p>
-		</header>
-        <button @click="toggleMute" class="text-xs px-3 py-1 rounded border border-border mt-2">
-            {{ isMuted ? '🔇 Muted' : '🔔 Sound On' }}
-        </button>
+            <button @click="toggleMute" class="text-xs px-3 py-1 rounded border border-border mt-2">
+                {{ isMuted ? '🔇 Muted' : '🔔 Sound On' }}
+            </button>
+            <button @click="handleCopyReport" class="text-xs px-3 py-1 rounded border border-border mt-2">
+                {{ copied ? '✅ Copied!' : '📋 Copy Report' }}
+            </button>
+        </header>
 		<!-- Sections -->
 		<FloorSection v-for="(section, index) in sections" :key="index" :section="section" />
 
@@ -24,11 +27,14 @@ import { ref, watch } from "vue"
 import { useSocket } from './composables/useSocket'
 import FloorSection from "./components/FloorSection.vue"
 import { useNotification } from './composables/useNotification'
+import { useReport } from './composables/useReport'
 
 const sections = ref([])
 const { isConnected, socket } = useSocket()
 const { isMuted, toggleMute, checkBosses, clearBossNotif  } = useNotification()
 
+const { copyReport } = useReport(sections)
+const copied = ref(false)
 // console.log('Socket connected?', isConnected.value)
 
 // Create dungeon state once
@@ -76,6 +82,13 @@ setInterval(() => {
     checkBosses(sections.value)
 }, 1000)
 
+async function handleCopyReport() {
+    const success = await copyReport()
+    if (success) {
+        copied.value = true
+        setTimeout(() => copied.value = false, 2000)
+    }
+}
 </script>
 
 <style scoped></style>
