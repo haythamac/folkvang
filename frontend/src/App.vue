@@ -10,11 +10,9 @@
 				Interactive & Real-time Boss Timer
 			</p>
 		</header>
-        
         <button @click="toggleMute" class="text-xs px-3 py-1 rounded border border-border mt-2">
             {{ isMuted ? '🔇 Muted' : '🔔 Sound On' }}
         </button>
-
 		<!-- Sections -->
 		<FloorSection v-for="(section, index) in sections" :key="index" :section="section" />
 

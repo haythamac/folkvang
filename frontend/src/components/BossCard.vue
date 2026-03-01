@@ -20,10 +20,10 @@
         </div>
 
         <!-- ALIVE -->
-        <div v-if="isAlive" class="flex gap-2">
-            <input v-model="timeInput" @input="userEdited = true" placeholder="hh:mm:ss AM/PM"
-                class="flex-1 bg-input border border-border rounded px-2 py-1 text-xs" />
-            <button @click="handleKill" class="bg-dead/80 hover:bg-dead text-dead-foreground text-xs px-3 py-1 rounded">
+        <div v-if="isAlive" class="space-y-2">
+            <TimePicker v-model="killedAtValue" ref="timePickerRef" />
+            <button @click="handleKill"
+                class="w-full bg-dead/80 hover:bg-dead text-dead-foreground text-xs px-3 py-1 rounded">
                 Kill
             </button>
         </div>
@@ -68,6 +68,7 @@
 
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted } from "vue"
+import TimePicker from './TimePicker.vue'
 
 const props = defineProps({
     boss: {
@@ -90,6 +91,9 @@ const timeInput = ref("")
 const userEdited = ref(false)
 const now = ref(Date.now())
 const showRevertConfirm = ref(false)
+
+const killedAtValue = ref(Date.now())
+const timePickerRef = ref(null)
 
 let interval = null
 
@@ -129,7 +133,7 @@ const statusLabel = computed(() => {
     return "DEAD";
 });
 
-const statusClass = computed(() => { 
+const statusClass = computed(() => {
     if (isAlive.value) return 'bg-alive/20 text-alive-foreground';
     if (possibleAlive.value) return 'bg-alive/40 text-alive-foreground';
     return 'bg-dead/20 text-dead-foreground';
@@ -179,40 +183,8 @@ watch(isAlive, (alive) => {
 ---------------------------------- */
 
 function handleKill() {
-    const match = timeInput.value.match(/(\d{1,2}):(\d{2}):(\d{2})\s*(AM|PM)/i)
-    if (!match) return
-    let [, hStr, mStr, sStr, period] = match;
-    let h = parseInt(hStr)
-    const m = parseInt(mStr)
-    const s = parseInt(sStr)
-
-    if (period.toUpperCase() === "PM" && h !== 12) h += 12
-    if (period.toUpperCase() === "AM" && h === 12) h = 0
-
-    const d = new Date()
-    d.setHours(h, m, s, 0)
-    const killedAt = d.getTime()
-    props.boss.killedAt = killedAt
-    
-    const strat = props.section.strategy
-    if (typeof strat === 'function') {
-        props.boss.respawnAt = strat(killedAt)
-        props.boss.respawnMinAt = null
-        props.boss.respawnMaxAt = null
-    } else if (strat && typeof strat === 'object' && 'min' in strat && 'max' in strat) {
-        props.boss.respawnMinAt = killedAt + strat.min
-        props.boss.respawnMaxAt = killedAt + strat.max
-        props.boss.respawnAt = null
-    } else {
-        // fallback: treat as fixed 1 hour if strategy is invalid
-        props.boss.respawnAt = killedAt + 60 * 60 * 1000;
-        props.boss.respawnMinAt = null;
-        props.boss.respawnMaxAt = null;
-    }
-
-    emit("kill", killedAt)
-    timeInput.value = ""
-    userEdited.value = false
+    emit('kill', killedAtValue.value)
+    if (timePickerRef.value) timePickerRef.value.reset()
 }
 
 function formatCountdown(ms) {
