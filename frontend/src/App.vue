@@ -10,6 +10,10 @@
 				Interactive & Real-time Boss Timer
 			</p>
 		</header>
+        
+        <button @click="toggleMute" class="text-xs px-3 py-1 rounded border border-border mt-2">
+            {{ isMuted ? '🔇 Muted' : '🔔 Sound On' }}
+        </button>
 
 		<!-- Sections -->
 		<FloorSection v-for="(section, index) in sections" :key="index" :section="section" />
@@ -21,9 +25,11 @@
 import { ref, watch } from "vue"
 import { useSocket } from './composables/useSocket'
 import FloorSection from "./components/FloorSection.vue"
+import { useNotification } from './composables/useNotification'
 
 const sections = ref([])
 const { isConnected, socket } = useSocket()
+const { isMuted, toggleMute, checkBosses, clearBossNotif  } = useNotification()
 
 // console.log('Socket connected?', isConnected.value)
 
@@ -48,7 +54,14 @@ socket.on('boss_revived', ({ bossId }) => {
     boss.respawnAt = null
     boss.respawnMinAt = null
     boss.respawnMaxAt = null
+    clearBossNotif(bossId)
 })
+
+function testSound() {
+    const audio = new Audio('/notif.mp3')
+    audio.volume = 0.5
+    audio.play()
+}
 
 function findBoss(bossId) {
     for (const section of sections.value) {
@@ -59,6 +72,12 @@ function findBoss(bossId) {
     }
     return null
 }
+
+// Run every second
+setInterval(() => {
+    checkBosses(sections.value)
+}, 1000)
+
 </script>
 
 <style scoped></style>
