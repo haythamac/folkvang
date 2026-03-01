@@ -3,8 +3,8 @@ import { ref } from 'vue'
 const isMuted = ref(JSON.parse(localStorage.getItem('notif_muted') ?? 'false'))
 const notifiedBosses = new Set()
 const lastPlayedAt = ref(0)
-const COOLDOWN_MS = 30 * 1000       // 30 seconds between sounds
-const NOTIFY_THRESHOLD_MS = 10 * 60 * 1000  // 1 hour — just for testing
+const COOLDOWN_MS = 30 * 60 * 1000       // 30 minutes between sounds
+const NOTIFY_THRESHOLD_MS = 10 * 60 * 1000  // 10 minutes before respawn
 
 function playSound() {
     if (isMuted.value) return

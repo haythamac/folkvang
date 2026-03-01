@@ -4,7 +4,6 @@ export function useReport(sections) {
 
         for (const section of sections.value) {
             for (const floor of section.floors) {
-                // Get only dead bosses with a killedAt, sorted by kill time
                 const deadBosses = floor.bosses
                     .filter(b => b.killedAt !== null)
                     .sort((a, b) => a.killedAt - b.killedAt)
@@ -12,15 +11,22 @@ export function useReport(sections) {
                 if (deadBosses.length === 0) continue
 
                 lines.push(`${floor.name}`)
+
                 for (const boss of deadBosses) {
-                    const time = new Date(boss.killedAt).toLocaleTimeString('en-US', {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: true
-                    })
+                    const ts = boss.respawnAt ?? boss.respawnMinAt
+                    if (!ts) continue
+
+                    const date = new Date(ts)
+                    let hours = date.getHours()
+                    if (hours > 12) hours -= 12
+                    if (hours === 0) hours = 12
+                    const minutes = String(date.getMinutes()).padStart(2, '0')
+                    const time = `${hours}:${minutes}`
+
                     lines.push(`${time} - ${boss.name}`)
                 }
-                lines.push('') // empty line between floors
+
+                lines.push('') // Empty line between floors
             }
         }
 
