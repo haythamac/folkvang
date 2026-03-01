@@ -16,6 +16,7 @@
                 {{ copied ? '✅ Copied!' : '📋 Copy Report' }}
             </button>
         </header>
+        <SpawningSoonPanel :spawningSoon="spawningSoon" />
 		<!-- Sections -->
 		<FloorSection v-for="(section, index) in sections" :key="index" :section="section" />
 
@@ -24,8 +25,11 @@
 
 <script setup>
 import { ref, watch } from "vue"
-import { useSocket } from './composables/useSocket'
 import FloorSection from "./components/FloorSection.vue"
+import SpawningSoonPanel from './components/SpawningSoonPanel.vue'
+
+import { useSocket } from './composables/useSocket'
+import { useSpawningSoon } from './composables/useSpawningSoon'
 import { useNotification } from './composables/useNotification'
 import { useReport } from './composables/useReport'
 
@@ -37,6 +41,10 @@ const { copyReport } = useReport(sections)
 const copied = ref(false)
 // console.log('Socket connected?', isConnected.value)
 
+const now = ref(Date.now())
+setInterval(() => now.value = Date.now(), 1000)
+
+const { spawningSoon } = useSpawningSoon(sections, now)
 // Create dungeon state once
 socket.on('full_state', (state) => {
     sections.value = state
