@@ -5,7 +5,7 @@
             <!-- Hours -->
             <div class="flex flex-col items-center">
                 <button @click="adjust('h', 1)" class="text-muted-foreground hover:text-primary text-[10px] py-0.5">▲</button>
-                <span class="font-mono text-lg font-bold w-8 text-center select-none">{{ displayH }}</span>
+                <span class="font-mono text-lg font-bold w-8 text-center select-none text-primary">{{ displayH }}</span>
                 <button @click="adjust('h', -1)" class="text-muted-foreground hover:text-primary text-[10px] py-0.5">▼</button>
             </div>
 
@@ -14,7 +14,7 @@
             <!-- Minutes -->
             <div class="flex flex-col items-center">
                 <button @click="adjust('m', 1)" class="text-muted-foreground hover:text-primary text-[10px] py-0.5">▲</button>
-                <span class="font-mono text-lg font-bold w-8 text-center select-none">{{ displayM }}</span>
+                <span class="font-mono text-lg font-bold w-8 text-center select-none text-primary">{{ displayM }}</span>
                 <button @click="adjust('m', -1)" class="text-muted-foreground hover:text-primary text-[10px] py-0.5">▼</button>
             </div>
 
@@ -23,14 +23,14 @@
             <!-- Seconds -->
             <div class="flex flex-col items-center">
                 <button @click="adjust('s', 1)" class="text-muted-foreground hover:text-primary text-[10px] py-0.5">▲</button>
-                <span class="font-mono text-lg font-bold w-8 text-center select-none">{{ displayS }}</span>
+                <span class="font-mono text-lg font-bold w-8 text-center select-none text-primary">{{ displayS }}</span>
                 <button @click="adjust('s', -1)" class="text-muted-foreground hover:text-primary text-[10px] py-0.5">▼</button>
             </div>
 
             <!-- AM/PM -->
             <div class="flex flex-col items-center ml-1">
                 <button @click="togglePeriod" class="text-muted-foreground hover:text-primary text-[10px] py-0.5">▲</button>
-                <span class="font-mono text-sm font-bold w-8 text-center select-none">{{ period }}</span>
+                <span class="font-mono text-sm font-bold w-8 text-center select-none text-primary">{{ period }}</span>
                 <button @click="togglePeriod" class="text-muted-foreground hover:text-primary text-[10px] py-0.5">▼</button>
             </div>
         </div>
