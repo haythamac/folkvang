@@ -1,8 +1,8 @@
-export function useReport(sections) {
-    function generateReport() {
+export function useReport() {
+    function generateReport(sections) {
         const lines = []
 
-        for (const section of sections.value) {
+        for (const section of sections) {
             for (const floor of section.floors) {
                 const deadBosses = floor.bosses
                     .filter(b => b.killedAt !== null)
@@ -26,15 +26,15 @@ export function useReport(sections) {
                     lines.push(`${time} - ${boss.name}`)
                 }
 
-                lines.push('') // Empty line between floors
+                lines.push('──────────────')
             }
         }
 
         return lines.join('\n')
     }
 
-    async function copyReport() {
-        const report = generateReport()
+    async function copyReport(sections) {
+        const report = generateReport(sections)
         if (!report) return false
         await navigator.clipboard.writeText(report)
         return true

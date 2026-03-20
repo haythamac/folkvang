@@ -1,13 +1,16 @@
 import { ref } from 'vue'
 
-const isMuted = ref(JSON.parse(localStorage.getItem('notif_muted') ?? 'false'))
+const isMutedFolkvang = ref(JSON.parse(localStorage.getItem('notif_muted_folkvang') ?? 'false'))
+const isMutedNidavellir = ref(JSON.parse(localStorage.getItem('notif_muted_nidavellir') ?? 'false'))
+
 const notifiedBosses = new Set()
 const lastPlayedAt = ref(0)
-const COOLDOWN_MS = 30 * 60 * 1000       // 30 minutes between sounds
-const NOTIFY_THRESHOLD_MS = 10 * 60 * 1000  // 10 minutes before respawn
+const COOLDOWN_MS = 30 * 60 * 1000
+const NOTIFY_THRESHOLD_MS = 10 * 60 * 1000
 
-function playSound() {
-    if (isMuted.value) return
+function playSound(mapType) {
+    const isMuted = mapType === 'folkvang' ? isMutedFolkvang.value : isMutedNidavellir.value
+    if (isMuted) return
 
     const now = Date.now()
     if (now - lastPlayedAt.value < COOLDOWN_MS) return
@@ -18,9 +21,14 @@ function playSound() {
     lastPlayedAt.value = now
 }
 
-function toggleMute() {
-    isMuted.value = !isMuted.value
-    localStorage.setItem('notif_muted', JSON.stringify(isMuted.value))
+function toggleMute(mapType) {
+    if (mapType === 'folkvang') {
+        isMutedFolkvang.value = !isMutedFolkvang.value
+        localStorage.setItem('notif_muted_folkvang', JSON.stringify(isMutedFolkvang.value))
+    } else {
+        isMutedNidavellir.value = !isMutedNidavellir.value
+        localStorage.setItem('notif_muted_nidavellir', JSON.stringify(isMutedNidavellir.value))
+    }
 }
 
 function checkBosses(sections) {
@@ -39,10 +47,9 @@ function checkBosses(sections) {
 
                 if (timeLeft > 0 && timeLeft <= NOTIFY_THRESHOLD_MS && !notifiedBosses.has(bossKey)) {
                     notifiedBosses.add(bossKey)
-                    playSound()
+                    playSound(section.mapType)
                 }
 
-                // Clear notification flag when boss is revived
                 if (boss.killedAt === null) {
                     notifiedBosses.delete(bossKey)
                 }
@@ -56,5 +63,5 @@ function clearBossNotif(bossId) {
 }
 
 export function useNotification() {
-    return { isMuted, toggleMute, checkBosses, clearBossNotif }
+    return { isMutedFolkvang, isMutedNidavellir, toggleMute, checkBosses, clearBossNotif }
 }
