@@ -1,43 +1,51 @@
 <template>
-    <div class="max-w-7xl mx-auto px-4 py-10 space-y-16">
+    <div class="max-w-2xl mx-auto px-4 py-4">
 
-        <!-- Header -->
-        <header class="text-center mb-10">
-            <h1 class="font-display text-4xl md:text-5xl font-bold text-primary glow-gold tracking-wider">
+        <!-- Compact Header -->
+        <div class="flex items-center justify-between mb-4">
+            <h1 class="text-lg font-bold text-primary glow-gold tracking-wider">
                 Folkvang Timer
             </h1>
-            <p class="text-muted-foreground mt-2 text-sm">
-                Interactive & Real-time Boss Timer
-            </p>
-            <button @click="toggleMute(activeTab)" class="text-xs px-3 py-1 rounded border border-border mt-2">
-                {{ activeTab === 'folkvang'
-                    ? (isMutedFolkvang ? '🔇 Muted' : '🔔 Sound On')
-                    : (isMutedNidavellir ? '🔇 Muted' : '🔔 Sound On')
-                }}
-            </button>
-            <button @click="handleCopyReport" class="text-xs px-3 py-1 rounded border border-border mt-2">
-                {{ copied ? '✅ Copied!' : '📋 Copy Report' }}
-            </button>
-        </header>
-        <SpawningSoonPanel :spawningSoon="spawningSoon" />
-        <div class="flex gap-2 justify-center mb-8">
-            <button @click="activeTab = 'folkvang'" :class="['px-6 py-2 rounded-lg text-sm font-semibold transition-all border',
-                activeTab === 'folkvang'
-                    ? 'bg-primary/20 border-primary text-primary'
-                    : 'border-border text-muted-foreground hover:border-primary/50']">
-                Folkvang
-            </button>
-            <button @click="activeTab = 'nidavellir'" :class="['px-6 py-2 rounded-lg text-sm font-semibold transition-all border',
-                activeTab === 'nidavellir'
-                    ? 'bg-primary/20 border-primary text-primary'
-                    : 'border-border text-muted-foreground hover:border-primary/50']">
-                Nidavellir
-            </button>
+
+            <!-- Tabs -->
+            <div class="flex gap-1">
+                <button @click="activeTab = 'folkvang'" :class="['px-4 py-1.5 rounded text-xs font-semibold transition-all border',
+                    activeTab === 'folkvang'
+                        ? 'bg-primary/20 border-primary text-primary'
+                        : 'border-border text-muted-foreground hover:border-primary/50']">
+                    Folkvang
+                </button>
+                <button @click="activeTab = 'nidavellir'" :class="['px-4 py-1.5 rounded text-xs font-semibold transition-all border',
+                    activeTab === 'nidavellir'
+                        ? 'bg-primary/20 border-primary text-primary'
+                        : 'border-border text-muted-foreground hover:border-primary/50']">
+                    Nidavellir
+                </button>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex gap-2">
+                <button @click="toggleMute(activeTab)"
+                    class="text-xs px-3 py-1.5 rounded border border-border text-muted-foreground hover:text-foreground transition-all">
+                    {{ activeTab === 'folkvang'
+                        ? (isMutedFolkvang ? '🔇' : '🔔')
+                        : (isMutedNidavellir ? '🔇' : '🔔') }}
+                </button>
+                <button @click="handleCopyReport"
+                    class="text-xs px-3 py-1.5 rounded border border-border text-muted-foreground hover:text-foreground transition-all">
+                    {{ copied ? '✅' : '📋' }}
+                </button>
+            </div>
         </div>
 
-        <!-- Active Sections -->
-        <FloorSection v-for="(section, sectionIndex) in activeSections" :key="section.id" :section="section"
-            :sectionIndex="sectionIndex" />
+        <!-- Spawning Soon -->
+        <SpawningSoonPanel :spawningSoon="spawningSoon" class="mb-4" />
+
+        <!-- Sections -->
+        <div class="space-y-6">
+            <FloorSection v-for="(section, sectionIndex) in activeSections" :key="section.id" :section="section"
+                :sectionIndex="sectionIndex" />
+        </div>
 
     </div>
 </template>
