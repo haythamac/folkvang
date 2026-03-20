@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- Section Title -->
-        <h2 class="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-2">
+        <h2 class="text-xs font-semibold text-primary uppercase tracking-widest mb-2">
             {{ section.name }}
         </h2>
 

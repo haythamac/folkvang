@@ -1,6 +1,7 @@
 import { computed } from 'vue'
 
 const THRESHOLD_MS = 10 * 60 * 1000 // 15 minutes
+// const THRESHOLD_MS = 3 * 60 * 60 * 1000 // 3 hours for testing
 
 export function useSpawningSoon(sections, now) {
     const spawningSoon = computed(() => {

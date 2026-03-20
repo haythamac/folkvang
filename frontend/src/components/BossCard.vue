@@ -199,7 +199,7 @@ const possibleAlive = computed(() =>
 
 const statusLabel = computed(() => {
     if (isAlive.value) return 'ALIVE'
-    if (possibleAlive.value) return 'POSSIBLE'
+    if (possibleAlive.value) return 'POSSIBLE ALIVE'
     return 'DEAD'
 })
 
