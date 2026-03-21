@@ -48,7 +48,7 @@
                     <div class="flex flex-col items-center">
                         <button @click="adjust('h', 1)"
                             class="text-muted-foreground hover:text-primary text-[8px]">▲</button>
-                        <span class="font-mono text-xs font-bold w-5 text-center">{{ displayH }}</span>
+                        <span class="font-mono text-xs font-bold w-5 text-center text-primary">{{ displayH }}</span>
                         <button @click="adjust('h', -1)"
                             class="text-muted-foreground hover:text-primary text-[8px]">▼</button>
                     </div>
@@ -56,7 +56,7 @@
                     <div class="flex flex-col items-center">
                         <button @click="adjust('m', 1)"
                             class="text-muted-foreground hover:text-primary text-[8px]">▲</button>
-                        <span class="font-mono text-xs font-bold w-5 text-center">{{ displayM }}</span>
+                        <span class="font-mono text-xs font-bold w-5 text-center text-primary">{{ displayM }}</span>
                         <button @click="adjust('m', -1)"
                             class="text-muted-foreground hover:text-primary text-[8px]">▼</button>
                     </div>
@@ -64,14 +64,14 @@
                     <div class="flex flex-col items-center">
                         <button @click="adjust('s', 1)"
                             class="text-muted-foreground hover:text-primary text-[8px]">▲</button>
-                        <span class="font-mono text-xs font-bold w-5 text-center">{{ displayS }}</span>
+                        <span class="font-mono text-xs font-bold w-5 text-center text-primary">{{ displayS }}</span>
                         <button @click="adjust('s', -1)"
                             class="text-muted-foreground hover:text-primary text-[8px]">▼</button>
                     </div>
                     <div class="flex flex-col items-center ml-1">
                         <button @click="togglePeriod"
                             class="text-muted-foreground hover:text-primary text-[8px]">▲</button>
-                        <span class="font-mono text-xs font-bold w-6 text-center">{{ period }}</span>
+                        <span class="font-mono text-xs font-bold w-6 text-center text-primary">{{ period }}</span>
                         <button @click="togglePeriod"
                             class="text-muted-foreground hover:text-primary text-[8px]">▼</button>
                     </div>

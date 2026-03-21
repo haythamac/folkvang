@@ -38,13 +38,20 @@
             </div>
         </div>
 
-        <!-- Spawning Soon -->
-        <SpawningSoonPanel :spawningSoon="spawningSoon" class="mb-4" />
+        <!-- Main Layout -->
+        <div class="flex gap-4 items-start">
 
-        <!-- Sections -->
-        <div class="space-y-6">
-            <FloorSection v-for="(section, sectionIndex) in activeSections" :key="section.id" :section="section"
-                :sectionIndex="sectionIndex" />
+            <!-- Left: Sections -->
+            <div class="flex-1 space-y-6">
+                <FloorSection v-for="(section, sectionIndex) in activeSections" :key="section.id" :section="section"
+                    :sectionIndex="sectionIndex" />
+            </div>
+
+            <!-- Right: Spawning Soon (sticky) -->
+            <div class="w-108 shrink-0 sticky top-4 mt-6">
+                <SpawningSoonPanel :spawningSoon="spawningSoon" />
+            </div>
+
         </div>
 
     </div>
@@ -68,10 +75,24 @@ const { isMutedFolkvang, isMutedNidavellir, toggleMute, checkBosses, clearBossNo
 const copied = ref(false)
 // console.log('Socket connected?', isConnected.value)
 
+const activeTab = ref('folkvang')
+
+const folkvangSections = computed(() =>
+    sections.value.filter(s => s.mapType === 'folkvang')
+)
+
+const nidavellirSections = computed(() =>
+    sections.value.filter(s => s.mapType === 'nidavellir')
+)
+
+const activeSections = computed(() =>
+    activeTab.value === 'folkvang' ? folkvangSections.value : nidavellirSections.value
+)
+
 const now = ref(Date.now())
 setInterval(() => now.value = Date.now(), 1000)
 
-const { spawningSoon } = useSpawningSoon(sections, now)
+const { spawningSoon } = useSpawningSoon(activeSections, now)
 // Create dungeon state once
 socket.on('full_state', (state) => {
     sections.value = state
@@ -126,19 +147,7 @@ async function handleCopyReport() {
 }
 
 
-const activeTab = ref('folkvang')
 
-const folkvangSections = computed(() =>
-    sections.value.filter(s => s.mapType === 'folkvang')
-)
-
-const nidavellirSections = computed(() =>
-    sections.value.filter(s => s.mapType === 'nidavellir')
-)
-
-const activeSections = computed(() =>
-    activeTab.value === 'folkvang' ? folkvangSections.value : nidavellirSections.value
-)
 </script>
 
 <style scoped></style>

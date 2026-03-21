@@ -13,7 +13,7 @@
         <!-- Collapsible content -->
         <div v-if="isOpen" class="px-4 pb-4 space-y-2">
             <div v-for="entry in spawningSoon" :key="entry.bossId"
-                class="flex items-center justify-between bg-background/50 border border-border rounded-lg px-3 py-2">
+                class="flex items-center justify-between bg-background/50 border border-border rounded-lg px-3 py-2.5 gap-4">
                 <div>
                     <p class="text-sm font-semibold">{{ entry.bossName }}</p>
                     <p class="text-xs text-muted-foreground">{{ entry.sectionName }} - {{ entry.floorName }} </p>
